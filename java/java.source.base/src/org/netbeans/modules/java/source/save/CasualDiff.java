@@ -1059,8 +1059,9 @@ public class CasualDiff {
             moveFwdToToken(tokenSequence, oldParts.components.isEmpty() ? posHint : endPos(oldParts.components.get(oldParts.components.size() - 1)), JavaTokenId.RPAREN);
             tokenSequence.moveNext();
             posHint = tokenSequence.offset();
-            if (localPointer < posHint)
+            if (localPointer < posHint) {
                 copyTo(localPointer, localPointer = posHint);
+            }
             filteredOldTDefs = oldParts.defs;
             filteredNewTDefs = newParts.defs;
             tokenSequence.move(localPointer);
@@ -1219,9 +1220,14 @@ public class CasualDiff {
 
     /**
      * Get and split into components and other members from a record.
-     * If the record declares a syntethic or compact constructor, obtain the parameters
-     * from that one, because the 'default' constructor in the classTree of a record is a canonical constructor (specifying all
-     * record components). Same applies for the canonical constuctor.
+     * If the record declares a synthethic or compact constructor, obtain the parameters
+     * from that one, and see if the last parameter is a varargs parameter. If so, patch the
+     * flags of the last recordComponent such that it also is returned as a varargs parameter.
+     * 
+     * This works because in a record there is a constructor because the 'default' constructor
+     * in the classTree of a record is a canonical constructor (specifying all
+     * record components). Same applies for the canonical constuctor, which in the classtree is normal constructor
+     * with all parameters equal to the record components.
      *
      * @param defs member declarations to consider
      * @param classTree for this record

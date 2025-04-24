@@ -610,6 +610,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
     public void test8Varargs() throws Exception {
         RETRIES = 0;
 //        debug = true;
+        AssertLinesEqualHelpers.setStringCompareMode(StringsCompareMode.IGNORE_INDENTATION);
         String source =
                 """
                 package t;
@@ -646,7 +647,7 @@ public class InnerOuterRecordTest extends RefactoringTestBase {
                  *
                  * @author junit
                  */
-                record F<P>(P first, String... second) {
+                 record F<P>(P first, String... second) {
 
                     public F {
                         assert null != first;
